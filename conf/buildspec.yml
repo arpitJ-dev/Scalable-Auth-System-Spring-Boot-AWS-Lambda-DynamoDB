@@ -1,0 +1,27 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: openjdk8
+  pre_build:
+    commands:
+      - cd Customer
+      - echo Run test on `date`
+      - ./gradlew testClasses
+  build:
+    commands:
+      - echo Build started on `date`
+      - ./gradlew build
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - ./gradlew jar
+artifacts:
+  files:
+    - Customer/build/distributions/Customer-0.0.1.zip
+    - apigateway.yaml
+    - lambda.yaml
+    - dynamodb.yaml
+    - master.yaml
+  discard-paths: yes

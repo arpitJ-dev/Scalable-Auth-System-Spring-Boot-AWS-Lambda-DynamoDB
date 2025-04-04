@@ -1,0 +1,7 @@
+[33mcommit 5b2d6d7822957ea9ea7a0c3c9fef820bc1c57a59[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author:     ajaisw43 <ajaisw43@asu.edu>
+AuthorDate: Fri Apr 4 12:00:00 2025 +0000
+Commit:     ajaisw43 <ajaisw43@asu.edu>
+CommitDate: Fri Apr 4 12:00:00 2025 +0000
+
+    Initial commit: Scalable Auth System – Spring Boot + AWS Lambda + DynamoDB

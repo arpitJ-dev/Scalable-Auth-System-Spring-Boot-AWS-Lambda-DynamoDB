@@ -1,0 +1,224 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Stack to deploy API Gateway through infrastructure as code.
+Parameters:
+  LambdaFunctionName:
+    ConstraintDescription: must contain only alphanumeric characters.
+    Default: UserManagementSystem
+    Description: The name of the Lambda function.
+    MaxLength: 64
+    MinLength: 1
+    Type: String
+
+  LambdaFunctionArn:
+    Description: Lambda function Arn.
+    Type: String
+
+Resources:
+
+  APIGatewayRest:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Join ["",[!Ref LambdaFunctionName, "APIGateway"]]
+      Description: !Join ["",["API Gateway to Lambda Function ",!Ref LambdaFunctionName]]
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  APIGatewayResourceUser:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref APIGatewayRest
+      ParentId: !GetAtt APIGatewayRest.RootResourceId
+      PathPart: user
+
+  APIGatewayUserPOSTMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      OperationName: !Sub ${AWS::AccountId}
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: POST
+      ResourceId: !Ref APIGatewayResourceUser
+      RestApiId: !Ref APIGatewayRest
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Join ["",["arn:aws:apigateway:",!Ref "AWS::Region", ":lambda:path/2015-03-31/functions/", !Ref LambdaFunctionArn,"/invocations"]]
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates: {"application/json":""}
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels: { "application/json": "Empty" }
+
+  APIGatewayRestPermissionUserPost:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${APIGatewayRest}/*/POST/user"
+      FunctionName: !Ref LambdaFunctionArn
+    DependsOn:
+    - APIGatewayRest
+    - APIGatewayUserPOSTMethod
+
+  APIGatewayUserPUTMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      OperationName: !Sub ${AWS::AccountId}
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: PUT
+      ResourceId: !Ref APIGatewayResourceUser
+      RestApiId: !Ref APIGatewayRest
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Join ["",["arn:aws:apigateway:",!Ref "AWS::Region", ":lambda:path/2015-03-31/functions/", !Ref LambdaFunctionArn,"/invocations"]]
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates: {"application/json":""}
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels: { "application/json": "Empty" }
+
+  APIGatewayRestPermissionUserPut:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${APIGatewayRest}/*/PUT/user"
+      FunctionName: !Ref LambdaFunctionArn
+    DependsOn:
+    - APIGatewayRest
+    - APIGatewayUserPUTMethod
+
+  APIGatewayResourceUserKey:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref APIGatewayRest
+      ParentId: !Ref APIGatewayResourceUser
+      PathPart: "{uuid}"
+
+  APIGatewayUserKeyGetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      OperationName: !Sub ${AWS::AccountId}
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: GET
+      ResourceId: !Ref APIGatewayResourceUserKey
+      RestApiId: !Ref APIGatewayRest
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Join ["",["arn:aws:apigateway:",!Ref "AWS::Region", ":lambda:path/2015-03-31/functions/", !Ref LambdaFunctionArn,"/invocations"]]
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates: {"application/json":""}
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels: { "application/json": "Empty" }
+
+  APIGatewayRestPermissionUserKeyGet:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${APIGatewayRest}/*/GET/user/*"
+      FunctionName: !Ref LambdaFunctionArn
+    DependsOn:
+    - APIGatewayRest
+    - APIGatewayUserKeyGetMethod
+
+  APIGatewayUserKeyDeleteMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      OperationName: !Sub ${AWS::AccountId}
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: DELETE
+      ResourceId: !Ref APIGatewayResourceUserKey
+      RestApiId: !Ref APIGatewayRest
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Join ["",["arn:aws:apigateway:",!Ref "AWS::Region", ":lambda:path/2015-03-31/functions/", !Ref LambdaFunctionArn,"/invocations"]]
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates: {"application/json":""}
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels: { "application/json": "Empty" }
+
+  APIGatewayRestPermissionUserKeyDelete:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${APIGatewayRest}/*/DELETE/user/*"
+      FunctionName: !Ref LambdaFunctionArn
+    DependsOn:
+    - APIGatewayRest
+    - APIGatewayUserKeyDeleteMethod
+
+  APIGatewayResourceUserAll:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref APIGatewayRest
+      ParentId: !Ref APIGatewayResourceUser
+      PathPart: "all"
+
+  APIGatewayUserAllGetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      OperationName: !Sub ${AWS::AccountId}
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: GET
+      ResourceId: !Ref APIGatewayResourceUserAll
+      RestApiId: !Ref APIGatewayRest
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Join ["",["arn:aws:apigateway:",!Ref "AWS::Region", ":lambda:path/2015-03-31/functions/", !Ref LambdaFunctionArn,"/invocations"]]
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates: {"application/json":""}
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels: { "application/json": "Empty" }
+
+  APIGatewayRestPermissionUserAllGet:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${APIGatewayRest}/*/GET/user/all"
+      FunctionName: !Ref LambdaFunctionArn
+    DependsOn:
+    - APIGatewayRest
+    - APIGatewayUserAllGetMethod
+
+  APIGatewayModel:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      ContentType: 'application/json'
+      RestApiId: !Ref APIGatewayRest
+      Schema: {}
+
+  APIGatewayDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref APIGatewayRest
+      Description: Lambda API Delployment
+    DependsOn: APIGatewayUserKeyGetMethod
+
+  APIGatewayStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      DeploymentId: !Ref APIGatewayDeployment
+      RestApiId: !Ref APIGatewayRest
+      StageName: ist
+      Description: API Gateway IST stage
+    DependsOn: APIGatewayDeployment
