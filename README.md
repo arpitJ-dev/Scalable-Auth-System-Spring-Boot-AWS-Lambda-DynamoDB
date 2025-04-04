@@ -17,8 +17,7 @@ This enterprise-grade user management system leverages AWS serverless services t
 
 ### System Architecture Diagram
 
-![System Architecture](doc/img/architecture-diagram.png)
-*High-level overview of the serverless architecture components*
+
 
 ## 🚀 Key Features
 
@@ -102,8 +101,7 @@ user-management-system/
 ```
 
 ### Project Architecture Overview
-![Project Structure](doc/img/project-structure.png)
-*Visual representation of the project organization*
+
 
 ### Key Components
 
@@ -198,12 +196,12 @@ This application implements a true serverless architecture where:
 - Event-driven processing model
 - Microservices separation of concerns
 
-![Serverless Architecture Pattern](doc/img/serverless-pattern.png)
+
 
 ### Infrastructure as Code
 The entire infrastructure is defined using CloudFormation templates:
 
-![CloudFormation Stack](doc/img/cloudformation-stack.png)
+
 
 - **Master Stack**: Orchestrates nested stack deployment
 - **DynamoDB Stack**: Database table configuration
@@ -349,26 +347,21 @@ Comprehensive error handling with:
 ## 🖥️ User Interface Examples
 
 ### API Testing with Postman
-![API Testing](doc/img/api-testing-example.png)
-*Testing API endpoints using Postman or similar tools*
+
 
 ### CloudWatch Monitoring Dashboard
-![CloudWatch Dashboard](doc/img/cloudwatch-dashboard.png)
-*Real-time monitoring of Lambda functions and API Gateway*
+
 
 ### DynamoDB Data Visualization
-![DynamoDB Data](doc/img/dynamodb-data-view.png)
-*User data stored in DynamoDB table*
+
 
 ## 🔍 Code Quality and Testing
 
 ### Test Coverage Report
-![Test Coverage](doc/img/test-coverage-report.png)
-*Comprehensive test coverage across all components*
+
 
 ### Build Pipeline
-![CI/CD Pipeline](doc/img/build-pipeline.png)
-*Automated build and deployment pipeline*
+
 
 ## ⚡ Quick Start
 
@@ -513,5 +506,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 **Built with ❤️ using AWS Serverless Technologies**
-
-*For detailed documentation, see [API_DOCUMENTATION.md](API_DOCUMENTATION.md) and [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)*
