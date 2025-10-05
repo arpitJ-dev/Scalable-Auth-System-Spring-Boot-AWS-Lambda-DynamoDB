@@ -132,48 +132,7 @@ user-management-system/
 - **`PROJECT_SUMMARY.md`**: Technical achievements and features
 
 ### 🔄 **Development Workflow**
-
-#### **Local Development**
-1. **Code Changes**: Modify Java classes in `src/main/java/com/aws/lambda/user/`
-2. **Testing**: Run unit tests in `src/test/java/com/aws/lambda/user/`
-3. **Build**: Execute `./gradlew clean build` to compile and package
-4. **Validation**: Ensure all tests pass before deployment
-
-#### **Deployment Process**
-1. **Package**: Build creates `UserManagement-1.0.0.zip` in `build/distributions/`
-2. **Upload**: Deploy CloudFormation templates and Lambda package to S3
-3. **Infrastructure**: CloudFormation creates AWS resources in dependency order:
-   - DynamoDB table → Lambda function → API Gateway
-4. **Integration**: API Gateway connects to Lambda, Lambda connects to DynamoDB
-
-#### **Component Interactions**
-```
-API Gateway → Lambda Handler → Spring Boot → UserController → UserService → UserRepository → DynamoDB
-     ↓              ↓              ↓              ↓              ↓              ↓
-   REST API    Request Proxy   Dependency    Business Logic   Data Access   Data Storage
-   Endpoints   (AWS Proxy)    Injection     & Validation     Layer         (NoSQL)
-```
-
-### 🎯 **Enhanced Features Implemented**
-
-#### **Original vs Enhanced Structure**
-| Component | Original | Enhanced |
-|-----------|----------|----------|
-| **Entity** | Simple Customer (3 fields) | Comprehensive User (10+ fields) |
-| **Validation** | Basic | Bean validation with custom messages |
-| **API Endpoints** | 4 basic CRUD | 7 endpoints including search & health |
-| **Error Handling** | Basic | Comprehensive with HTTP status codes |
-| **Testing** | Minimal | Full test suite with unit & integration tests |
-| **Documentation** | Basic README | Professional documentation suite |
-| **Architecture** | Simple | Enterprise-grade with proper layering |
-
-#### **Key Improvements**
-- ✅ **Enhanced Data Model**: Extended User entity with email, department, role, audit fields
-- ✅ **Professional API**: RESTful endpoints with proper validation and error handling
-- ✅ **Comprehensive Testing**: Unit tests for controllers, services, and integration tests
-- ✅ **Infrastructure as Code**: Complete CloudFormation deployment automation
-- ✅ **Professional Documentation**: API docs, deployment guide, and technical summary
-- ✅ **Clean Architecture**: Proper separation of concerns with layered design
+Refer to the Quick Start and Deployment Guide sections below for local development, build, and deployment steps.
 
 ## 📋 API Endpoints
 
@@ -187,26 +146,11 @@ API Gateway → Lambda Handler → Spring Boot → UserController → UserServic
 | GET | `/user/department/{department}` | Get users by department |
 | GET | `/user/health` | Health check endpoint |
 
-## 🏛️ Architecture Patterns
+## 🏛️ Architecture
 
-### Serverless Design
-This application implements a true serverless architecture where:
-- No server provisioning or maintenance required
-- Automatic scaling based on demand
-- Event-driven processing model
-- Microservices separation of concerns
-
-
-
-### Infrastructure as Code
-The entire infrastructure is defined using CloudFormation templates:
-
-
-
-- **Master Stack**: Orchestrates nested stack deployment
-- **DynamoDB Stack**: Database table configuration
-- **Lambda Stack**: Function deployment and IAM roles
-- **API Gateway Stack**: REST API configuration
+- Serverless design using AWS Lambda, API Gateway, and DynamoDB
+- Infrastructure as Code via CloudFormation templates
+- IAM for access control and security
 
 ## 🔧 Deployment Guide
 
@@ -280,89 +224,29 @@ The entire infrastructure is defined using CloudFormation templates:
 
 ## 📊 Performance Characteristics
 
-- **Throughput**: Supports thousands of concurrent requests
-- **Latency**: Sub-100ms response times for typical operations
-- **Availability**: 99.99% uptime SLA through AWS managed services
-- **Scalability**: Auto-scales from 0 to millions of requests
+Designed for low-latency operations and automatic scaling using managed AWS services.
 
-## 🔒 Security Features
+## 🔒 Security
 
-- **IAM Integration**: Fine-grained access control
-- **Encryption**: Data encrypted at rest and in transit
-- **VPC Support**: Optional deployment in private subnets
-- **API Throttling**: Built-in rate limiting and abuse prevention
+IAM-based access control; encryption in transit by default via API Gateway HTTPS.
 
-## 📈 Monitoring and Observability
+## 📈 Monitoring
 
-- **CloudWatch Logs**: Centralized logging for all components
-- **CloudWatch Metrics**: Performance and usage monitoring
-- **X-Ray Integration**: Distributed tracing capabilities
-- **Custom Dashboards**: Real-time system health visualization
+CloudWatch Logs and Metrics are used for observability.
 
-## 🚀 Future Enhancements
+## 🚀 Future Work
 
-- **Multi-tenancy**: Support for multiple customer organizations
-- **Advanced Analytics**: User behavior tracking and reporting
-- **Integration APIs**: Third-party system connectivity
-- **Mobile SDKs**: Native mobile application support
+Planned items may include multi-tenancy and extended analytics.
 
-## 📚 Technical Documentation
+## 📚 Documentation
 
-### Data Model
-The enhanced User entity includes:
-- **UUID**: Auto-generated unique identifier (partition key)
-- **Name**: User's full name (required with validation)
-- **Email**: User's email address (required with email validation)
-- **Age**: User's age (required, 18-120 range validation)
-- **Department**: Organizational unit (optional)
-- **Role**: Job title/position (optional)
-- **Phone Number**: Contact information (optional)
-- **Created At**: Timestamp when user was created (auto-set)
-- **Updated At**: Timestamp when user was last modified (auto-updated)
-- **Is Active**: Soft delete flag (defaults to true)
+- DynamoDB Table Structure: see `doc/img/dynamodb-mind-map.jpg`
+- API Gateway Configuration: see `doc/img/api-gateway-mind-map.jpg`
+- CloudFormation Stack Architecture: see `doc/img/master-mind-map.jpg`
 
-### DynamoDB Table Structure
-![DynamoDB Table Structure](doc/img/dynamodb-mind-map.jpg)
-*DynamoDB table design with UUID as partition key*
+## 🔍 Testing
 
-### API Gateway Configuration
-![API Gateway Mind Map](doc/img/api-gateway-mind-map.jpg)
-*API Gateway resources and configuration structure*
-
-### CloudFormation Stack Architecture
-![Master Stack Mind Map](doc/img/master-mind-map.jpg)
-*CloudFormation nested stack relationships and dependencies*
-
-### Error Handling
-Comprehensive error handling with:
-- HTTP status code mapping
-- Detailed error messages
-- Graceful degradation patterns
-
-### Testing Strategy
-- Unit tests for business logic
-- Integration tests for AWS services
-- Performance testing for scalability validation
-
-## 🖥️ User Interface Examples
-
-### API Testing with Postman
-
-
-### CloudWatch Monitoring Dashboard
-
-
-### DynamoDB Data Visualization
-
-
-## 🔍 Code Quality and Testing
-
-### Test Coverage Report
-
-
-### Build Pipeline
-
-
+Run unit and integration tests with `./gradlew test`.
 ## ⚡ Quick Start
 
 ### Prerequisites
@@ -434,22 +318,13 @@ curl -X POST https://your-api-gateway-url.amazonaws.com/user \
   }'
 ```
 
-## 📊 Performance Metrics
+## 📊 Metrics
 
-| Metric | Value |
-|--------|-------|
-| Response Time | < 100ms |
-| Throughput | 10,000+ RPS |
-| Availability | 99.99% |
-| Cold Start | < 2s |
+Metrics depend on workload and AWS configuration; monitor via CloudWatch.
 
 ## 🎯 Use Cases
 
-- **Enterprise User Management**: Complete CRUD operations for user data
-- **Microservices Architecture**: Scalable, independent service components
-- **Event-Driven Systems**: Lambda-based processing with DynamoDB integration
-- **API-First Development**: RESTful endpoints for third-party integration
-- **Cloud-Native Applications**: Serverless deployment with auto-scaling
+Enterprise user management with CRUD operations and search endpoints.
 
 ## 🔧 Troubleshooting
 
