@@ -1,4 +1,4 @@
-# Enterprise User Management System - AWS Serverless Architecture
+# Scalable Auth System
 
 [![AWS](https://img.shields.io/badge/AWS-Serverless-orange?logo=amazon-aws)](https://aws.amazon.com/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.3.0-green?logo=spring)](https://spring.io/projects/spring-boot)
@@ -7,377 +7,413 @@
 [![CloudFormation](https://img.shields.io/badge/Infrastructure-CloudFormation-red?logo=amazon-aws)](https://aws.amazon.com/cloudformation/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-A comprehensive serverless application built with Spring Boot, AWS Lambda, DynamoDB, and API Gateway. This project demonstrates modern cloud-native architecture patterns and infrastructure-as-code practices using AWS CloudFormation.
+A serverless user-management application built with **Spring Boot**, **AWS Lambda**, **DynamoDB**, **API Gateway**, and **CloudFormation**.
+
+This project demonstrates how a Java Spring Boot backend can be adapted for AWS Lambda, exposed through API Gateway, backed by DynamoDB, and deployed using infrastructure-as-code templates.
 
 ![AWS Serverless Architecture](doc/img/serverless-aws.png)
 
-## 🏗️ Architecture Overview
+## Project Goal
 
-This enterprise-grade user management system leverages AWS serverless services to provide a scalable, cost-effective, and highly available solution for user data management. The architecture follows best practices for microservices and event-driven design.
+The goal of this project is to show a cloud-native backend architecture using managed AWS services instead of a traditional server-based deployment.
 
-### System Architecture Diagram
+It focuses on:
 
+* Serverless backend design
+* REST API development
+* DynamoDB-backed persistence
+* AWS Lambda deployment
+* API Gateway routing
+* CloudFormation-based infrastructure setup
+* Build, test, and deployment documentation
 
+## Architecture Overview
 
-## 🚀 Key Features
+This serverless user-management system uses AWS Lambda, API Gateway, DynamoDB, and CloudFormation to provide a cloud-native backend for user data management.
 
-- **RESTful API**: Complete CRUD operations for user management
-- **Enhanced User Model**: Comprehensive user entity with validation and audit fields
-- **Auto-scaling**: Handles traffic spikes automatically without manual intervention
-- **Global Availability**: Multi-region deployment capabilities
-- **Cost Optimization**: Pay-per-use pricing model
-- **Security**: IAM-based access control and encryption at rest
-- **Monitoring**: CloudWatch integration for logging and metrics
-- **Soft Delete**: User activation/deactivation instead of hard deletion
-- **Advanced Search**: Department and role-based filtering
-- **Health Monitoring**: Built-in health check endpoints
-- **Comprehensive Testing**: Unit and integration test suite
+The architecture focuses on managed compute, API routing, DynamoDB persistence, and reproducible infrastructure setup.
 
-## 🛠️ Technology Stack
+### Main Flow
 
-- **Backend**: Spring Boot 2.3.0 with Java 8
-- **Database**: AWS DynamoDB with optimized data modeling
-- **Infrastructure**: AWS CloudFormation with nested stacks
-- **API**: RESTful endpoints with JSON serialization
-- **Deployment**: Serverless architecture with zero server management
-
-## 📁 Project Structure
-
+```text
+Client / API Consumer
+        |
+        v
+Amazon API Gateway
+        |
+        v
+AWS Lambda
+        |
+        v
+Spring Boot Application
+        |
+        v
+Amazon DynamoDB
 ```
-user-management-system/
-├── Customer/                          # Main Spring Boot application
+
+## Key Features
+
+* **RESTful API:** CRUD operations for user management
+* **User Model:** User entity with validation and audit fields
+* **Serverless Compute:** Spring Boot application packaged for AWS Lambda
+* **API Routing:** API Gateway routes external requests to Lambda
+* **DynamoDB Persistence:** User records stored in DynamoDB
+* **Soft Delete:** User activation/deactivation instead of hard deletion
+* **Department Filtering:** Retrieve users by department
+* **Health Monitoring:** Built-in health check endpoint
+* **Testing Structure:** Unit and integration tests for controller, service, and application context
+* **Infrastructure as Code:** AWS resources defined with CloudFormation templates
+
+## Cloud Engineering Highlights
+
+* Packaged a Spring Boot backend for AWS Lambda execution
+* Exposed REST endpoints through Amazon API Gateway
+* Used DynamoDB as the persistence layer for user records
+* Defined backend infrastructure using CloudFormation templates
+* Added health-check and CRUD endpoints for backend validation
+* Included API documentation and deployment instructions for reproducible setup
+* Used AWS managed services to avoid maintaining traditional application servers
+
+## Technology Stack
+
+| Area           | Technologies                          |
+| -------------- | ------------------------------------- |
+| Backend        | Spring Boot 2.3.0, Java 8             |
+| Compute        | AWS Lambda                            |
+| API Management | Amazon API Gateway                    |
+| Database       | Amazon DynamoDB                       |
+| Infrastructure | AWS CloudFormation with nested stacks |
+| Build Tool     | Gradle                                |
+| Testing        | JUnit, Spring Boot Test               |
+| Monitoring     | Amazon CloudWatch Logs and Metrics    |
+| Deployment     | AWS CLI, S3, CloudFormation           |
+
+## Project Structure
+
+```text
+Scalable-Auth-System-Spring-Boot-AWS-Lambda-DynamoDB/
+├── Customer/
 │   ├── src/main/java/com/aws/lambda/user/
 │   │   ├── entities/
-│   │   │   └── User.java              # Enhanced User entity with validation
+│   │   │   └── User.java
 │   │   ├── controllers/
-│   │   │   └── UserController.java    # REST API controller with CRUD operations
+│   │   │   └── UserController.java
 │   │   ├── services/
-│   │   │   ├── UserService.java       # Service interface
-│   │   │   └── UserServiceImpl.java   # Service implementation with business logic
+│   │   │   ├── UserService.java
+│   │   │   └── UserServiceImpl.java
 │   │   ├── repositories/
-│   │   │   ├── UserRepository.java    # Repository interface
-│   │   │   └── UserRepositoryImpl.java # DynamoDB repository implementation
+│   │   │   ├── UserRepository.java
+│   │   │   └── UserRepositoryImpl.java
 │   │   ├── configurations/
-│   │   │   └── DynamoDBConfig.java    # DynamoDB configuration
-│   │   ├── UserManagementApplication.java # Main Spring Boot application
-│   │   └── StreamLambdaHandler.java   # AWS Lambda handler
+│   │   │   └── DynamoDBConfig.java
+│   │   ├── UserManagementApplication.java
+│   │   └── StreamLambdaHandler.java
 │   ├── src/test/java/com/aws/lambda/user/
 │   │   ├── controllers/
-│   │   │   └── UserControllerTest.java # Controller unit tests
+│   │   │   └── UserControllerTest.java
 │   │   ├── services/
-│   │   │   └── UserServiceTest.java    # Service unit tests
-│   │   └── UserManagementApplicationTests.java # Integration tests
+│   │   │   └── UserServiceTest.java
+│   │   └── UserManagementApplicationTests.java
 │   ├── src/main/resources/
-│   │   └── application.properties     # Application configuration
+│   │   └── application.properties
 │   ├── src/test/resources/
-│   │   └── application-test.properties # Test configuration
-│   ├── build.gradle                   # Build configuration with validation
-│   ├── settings.gradle               # Gradle settings
-│   ├── gradlew                        # Gradle wrapper (Unix)
-│   └── gradlew.bat                    # Gradle wrapper (Windows)
-├── CloudFormation Templates/
-│   ├── master.yaml                    # Main deployment stack
-│   ├── dynamodb.yaml                  # DynamoDB table configuration
-│   ├── lambda.yaml                    # Lambda function setup
-│   └── apigateway.yaml                # API Gateway configuration
-├── Documentation/
-│   ├── README.md                      # This comprehensive guide
-│   ├── API_DOCUMENTATION.md           # Complete API reference
-│   ├── DEPLOYMENT_GUIDE.md            # Step-by-step deployment guide
-│   └── PROJECT_SUMMARY.md             # Technical achievements summary
-├── doc/img/                           # Screenshots and diagrams
-│   ├── serverless-aws.png             # Architecture overview
-│   ├── dynamodb-mind-map.jpg          # DynamoDB structure
-│   ├── api-gateway-mind-map.jpg       # API Gateway configuration
-│   ├── master-mind-map.jpg            # CloudFormation stack structure
-│   └── [other deployment screenshots]
+│   │   └── application-test.properties
+│   ├── build.gradle
+│   ├── settings.gradle
+│   ├── gradlew
+│   └── gradlew.bat
+├── doc/img/
+│   ├── serverless-aws.png
+│   ├── dynamodb-mind-map.jpg
+│   ├── api-gateway-mind-map.jpg
+│   ├── master-mind-map.jpg
+│   └── deployment screenshots
 ├── conf/
-│   └── buildspec.yml                  # CI/CD build specification
-└── [Root Level Files]
-    ├── master.yaml                    # CloudFormation master template
-    ├── dynamodb.yaml                  # DynamoDB CloudFormation template
-    ├── lambda.yaml                    # Lambda CloudFormation template
-    └── apigateway.yaml                # API Gateway CloudFormation template
+│   └── buildspec.yml
+├── master.yaml
+├── dynamodb.yaml
+├── lambda.yaml
+├── apigateway.yaml
+├── API_DOCUMENTATION.md
+├── DEPLOYMENT_GUIDE.md
+├── PROJECT_SUMMARY.md
+├── LICENSE
+└── README.md
 ```
 
-### Project Architecture Overview
+## Key Components
 
+### Application Layer
 
-### Key Components
+Located under `Customer/src/main/java/com/aws/lambda/user/`.
 
-#### 🏗️ **Application Layer (`Customer/src/main/java/com/aws/lambda/user/`)**
-- **`UserManagementApplication.java`**: Main Spring Boot application entry point
-- **`StreamLambdaHandler.java`**: AWS Lambda handler for serverless deployment
-- **`entities/User.java`**: Enhanced User entity with validation and DynamoDB mapping
-- **`controllers/UserController.java`**: REST API controller with comprehensive CRUD operations
-- **`services/`**: Business logic layer with validation and error handling
-- **`repositories/`**: Data access layer with DynamoDB integration
-- **`configurations/DynamoDBConfig.java`**: AWS DynamoDB configuration
+* **`UserManagementApplication.java`**: Main Spring Boot application entry point
+* **`StreamLambdaHandler.java`**: AWS Lambda handler for serverless deployment
+* **`entities/User.java`**: User entity with validation and DynamoDB mapping
+* **`controllers/UserController.java`**: REST API controller for user operations
+* **`services/`**: Business logic layer with validation and error handling
+* **`repositories/`**: Data access layer with DynamoDB integration
+* **`configurations/DynamoDBConfig.java`**: DynamoDB configuration
 
-#### 🧪 **Testing Layer (`Customer/src/test/java/com/aws/lambda/user/`)**
-- **`UserControllerTest.java`**: Unit tests for API endpoints
-- **`UserServiceTest.java`**: Unit tests for business logic
-- **`UserManagementApplicationTests.java`**: Integration tests for Spring context
+### Testing Layer
 
-#### ☁️ **Infrastructure Layer (CloudFormation Templates)**
-- **`master.yaml`**: Orchestrates nested stack deployment
-- **`dynamodb.yaml`**: Creates DynamoDB table with proper configuration
-- **`lambda.yaml`**: Deploys Lambda function with IAM roles
-- **`apigateway.yaml`**: Configures REST API with Lambda integration
+Located under `Customer/src/test/java/com/aws/lambda/user/`.
 
-#### 📚 **Documentation Layer**
-- **`README.md`**: Comprehensive project guide
-- **`API_DOCUMENTATION.md`**: Complete API reference
-- **`DEPLOYMENT_GUIDE.md`**: Step-by-step deployment instructions
-- **`PROJECT_SUMMARY.md`**: Technical achievements and features
+* **`UserControllerTest.java`**: Unit tests for API endpoints
+* **`UserServiceTest.java`**: Unit tests for business logic
+* **`UserManagementApplicationTests.java`**: Integration tests for Spring context
 
-### 🔄 **Development Workflow**
-Refer to the Quick Start and Deployment Guide sections below for local development, build, and deployment steps.
+### Infrastructure Layer
 
-## 📋 API Endpoints
+CloudFormation templates define the AWS resources required for deployment.
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/user` | Create a new user |
-| GET | `/user/{uuid}` | Retrieve user by UUID |
-| PUT | `/user` | Update existing user |
-| DELETE | `/user/{uuid}` | Delete user by UUID |
-| GET | `/user/all` | Retrieve all users |
-| GET | `/user/department/{department}` | Get users by department |
-| GET | `/user/health` | Health check endpoint |
+* **`master.yaml`**: Orchestrates nested stack deployment
+* **`dynamodb.yaml`**: Creates the DynamoDB table
+* **`lambda.yaml`**: Deploys the Lambda function and IAM configuration
+* **`apigateway.yaml`**: Configures API Gateway and Lambda integration
 
-## 🏛️ Architecture
+### Documentation Layer
 
-- Serverless design using AWS Lambda, API Gateway, and DynamoDB
-- Infrastructure as Code via CloudFormation templates
-- IAM for access control and security
+* **`README.md`**: Main project overview
+* **`API_DOCUMENTATION.md`**: API reference
+* **`DEPLOYMENT_GUIDE.md`**: Step-by-step AWS deployment guide
+* **`PROJECT_SUMMARY.md`**: Technical summary and project notes
 
-## 🔧 Deployment Guide
+## API Endpoints
 
-### Prerequisites
-- AWS CLI configured with appropriate permissions
-- Java 8+ development environment
-- Gradle build tool
+| Method   | Endpoint                        | Description                  |
+| -------- | ------------------------------- | ---------------------------- |
+| `POST`   | `/user`                         | Create a new user            |
+| `GET`    | `/user/{uuid}`                  | Retrieve user by UUID        |
+| `PUT`    | `/user`                         | Update existing user         |
+| `DELETE` | `/user/{uuid}`                  | Soft delete user by UUID     |
+| `GET`    | `/user/all`                     | Retrieve all users           |
+| `GET`    | `/user/department/{department}` | Retrieve users by department |
+| `GET`    | `/user/health`                  | Health check endpoint        |
 
-### Step-by-Step Deployment
+## Deployment Summary
 
-1. **Prepare Application Package**
-   ```bash
-   cd Customer
-   ./gradlew clean build
-   ```
+This project uses AWS CloudFormation templates to provision the main backend infrastructure.
 
-2. **Create S3 Bucket and Upload Files**
-   ```bash
-   # Create S3 bucket
-   aws s3 mb s3://your-user-management-bucket --region us-east-1
-   
-   # Upload CloudFormation templates
-   aws s3 cp ../master.yaml s3://your-user-management-bucket/
-   aws s3 cp ../dynamodb.yaml s3://your-user-management-bucket/
-   aws s3 cp ../lambda.yaml s3://your-user-management-bucket/
-   aws s3 cp ../apigateway.yaml s3://your-user-management-bucket/
-   
-   # Upload Lambda deployment package
-   aws s3 cp build/distributions/UserManagement-1.0.0.zip s3://your-user-management-bucket/
-   ```
+| Template          | Purpose                                               |
+| ----------------- | ----------------------------------------------------- |
+| `master.yaml`     | Coordinates the deployment stack                      |
+| `lambda.yaml`     | Defines the Lambda function and related configuration |
+| `dynamodb.yaml`   | Defines the DynamoDB table                            |
+| `apigateway.yaml` | Defines API Gateway routing and Lambda integration    |
 
-3. **Deploy Infrastructure**
-   ```bash
-   aws cloudformation create-stack \
-     --stack-name user-management-system \
-     --template-url https://s3.amazonaws.com/your-user-management-bucket/master.yaml \
-     --parameters ParameterKey=LambdaCodeS3Bucket,ParameterValue=your-user-management-bucket \
-                  ParameterKey=LambdaCodeS3Key,ParameterValue=UserManagement-1.0.0.zip \
-                  ParameterKey=TemplateURLDynamoDB,ParameterValue=https://s3.amazonaws.com/your-user-management-bucket/dynamodb.yaml \
-                  ParameterKey=TemplateURLambda,ParameterValue=https://s3.amazonaws.com/your-user-management-bucket/lambda.yaml \
-                  ParameterKey=TemplateURLApiGateway,ParameterValue=https://s3.amazonaws.com/your-user-management-bucket/apigateway.yaml \
-     --capabilities CAPABILITY_IAM
-   ```
+High-level deployment flow:
 
-4. **Verify Deployment**
-   - Check CloudFormation console for successful stack creation
-   - Test API endpoints using the provided API Gateway URL
-   - Monitor DynamoDB table for data persistence
+1. Build the Spring Boot Lambda package.
+2. Upload the Lambda artifact and CloudFormation templates to S3.
+3. Deploy the master CloudFormation stack.
+4. Retrieve the API Gateway URL from stack outputs.
+5. Test the health and user-management endpoints.
 
-### Deployment Screenshots
+For full AWS deployment steps, including S3 upload, CloudFormation stack creation, and API Gateway testing, follow:
 
-#### CloudFormation Stack Creation
+[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
+
+## Deployment Screenshots
+
+### CloudFormation Stack Creation
+
 ![CloudFormation Stack Creation](doc/img/cloudformation-create-stack.png)
-*Creating the CloudFormation stack with nested templates*
 
-#### Stack Parameters Configuration
+Creating the CloudFormation stack with nested templates.
+
+### Stack Parameters Configuration
+
 ![CloudFormation Parameters](doc/img/cloudformation-stack-parameters.png)
-*Configuring stack parameters for deployment*
 
-#### Stack Events Monitoring
+Configuring stack parameters for deployment.
+
+### Stack Events Monitoring
+
 ![CloudFormation Events](doc/img/cloudformation-stack-events.png)
-*Monitoring stack creation progress and events*
 
-#### API Gateway Deployment
+Monitoring stack creation progress and events.
+
+### API Gateway Deployment
+
 ![API Gateway Deployment](doc/img/apigateway-deploy.png)
-*API Gateway service configuration and deployment*
 
-#### DynamoDB Table Creation
+API Gateway service configuration and deployment.
+
+### DynamoDB Table Creation
+
 ![DynamoDB Table](doc/img/dynamodb-table-customer.png)
-*DynamoDB User table with enhanced data structure after deployment*
 
-## 📊 Performance Characteristics
+DynamoDB user table after deployment.
 
-Designed for low-latency operations and automatic scaling using managed AWS services.
+## Testing
 
-## 🔒 Security
+Run unit and integration tests from the `Customer` directory:
 
-IAM-based access control; encryption in transit by default via API Gateway HTTPS.
+```bash
+cd Customer
+./gradlew test
+```
 
-## 📈 Monitoring
+Test coverage includes:
 
-CloudWatch Logs and Metrics are used for observability.
+* Controller behavior
+* Service-layer business logic
+* Spring application context loading
+* User-management flow validation
 
-## 🚀 Future Work
-
-Planned items may include multi-tenancy and extended analytics.
-
-## 📚 Documentation
-
-- DynamoDB Table Structure: see `doc/img/dynamodb-mind-map.jpg`
-- API Gateway Configuration: see `doc/img/api-gateway-mind-map.jpg`
-- CloudFormation Stack Architecture: see `doc/img/master-mind-map.jpg`
-
-## 🔍 Testing
-
-Run unit and integration tests with `./gradlew test`.
-## ⚡ Quick Start
+## Quick Start
 
 ### Prerequisites
-- AWS CLI configured
-- Java 8+
-- Gradle
 
-### Local Development
+* AWS CLI configured
+* Java 8 or higher
+* Gradle
+
+### Local Build
+
 ```bash
-# Clone the repository
-git clone <your-repository-url>
-cd user-management-system
-
-# Build the application
-cd Customer
+git clone https://github.com/arpitJ-dev/Scalable-Auth-System-Spring-Boot-AWS-Lambda-DynamoDB.git
+cd Scalable-Auth-System-Spring-Boot-AWS-Lambda-DynamoDB/Customer
 ./gradlew clean build
+```
 
-# Run tests
+### Run Tests
+
+```bash
 ./gradlew test
+```
 
-# Build deployment package
+### Build Deployment Package
+
+```bash
 ./gradlew buildZip
 ```
 
-### Deploy to AWS
+### AWS Deployment
+
+For full deployment instructions, use:
+
+[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
+
+## Performance Characteristics
+
+This project is designed around managed AWS services that can scale with incoming request volume based on AWS Lambda, API Gateway, and DynamoDB configuration.
+
+Actual performance depends on workload, Lambda memory settings, cold starts, DynamoDB capacity mode, and API Gateway behavior.
+
+## Security
+
+This project demonstrates basic cloud security practices for a serverless backend:
+
+* IAM-based access control for AWS resources
+* API Gateway HTTPS endpoint usage
+* DynamoDB-backed persistence
+* Lambda execution role configuration
+* Soft delete support for user records
+
+## Monitoring
+
+CloudWatch Logs and Metrics are used for observability.
+
+Useful areas to monitor include:
+
+* Lambda invocation count
+* Lambda errors
+* Lambda duration
+* API Gateway request count
+* API Gateway latency
+* DynamoDB read/write activity
+
+## Documentation
+
+* [API Documentation](./API_DOCUMENTATION.md)
+* [Deployment Guide](./DEPLOYMENT_GUIDE.md)
+* [Project Summary](./PROJECT_SUMMARY.md)
+* DynamoDB table structure: `doc/img/dynamodb-mind-map.jpg`
+* API Gateway configuration: `doc/img/api-gateway-mind-map.jpg`
+* CloudFormation stack architecture: `doc/img/master-mind-map.jpg`
+
+## Use Cases
+
+This project can be used as a reference for:
+
+* Serverless CRUD APIs
+* User-management workflows
+* Spring Boot on AWS Lambda
+* API Gateway and Lambda integration
+* DynamoDB-backed backend services
+* CloudFormation-based backend deployment
+
+## Troubleshooting
+
+### Build Failures
+
 ```bash
-# Upload CloudFormation templates to S3
-aws s3 cp master.yaml s3://your-bucket/
-aws s3 cp dynamodb.yaml s3://your-bucket/
-aws s3 cp lambda.yaml s3://your-bucket/
-aws s3 cp apigateway.yaml s3://your-bucket/
-
-# Upload Lambda deployment package
-aws s3 cp build/distributions/UserManagement-1.0.0.zip s3://your-bucket/
-
-# Deploy infrastructure
-aws cloudformation create-stack \
-  --stack-name user-management-system \
-  --template-url https://s3.amazonaws.com/your-bucket/master.yaml \
-  --parameters ParameterKey=LambdaCodeS3Bucket,ParameterValue=your-bucket \
-               ParameterKey=LambdaCodeS3Key,ParameterValue=UserManagement-1.0.0.zip \
-               ParameterKey=TemplateURLDynamoDB,ParameterValue=https://s3.amazonaws.com/your-bucket/dynamodb.yaml \
-               ParameterKey=TemplateURLambda,ParameterValue=https://s3.amazonaws.com/your-bucket/lambda.yaml \
-               ParameterKey=TemplateURLApiGateway,ParameterValue=https://s3.amazonaws.com/your-bucket/apigateway.yaml \
-  --capabilities CAPABILITY_IAM
-```
-
-### Test the Deployment
-```bash
-# Get API Gateway URL
-aws cloudformation describe-stacks \
-  --stack-name user-management-system \
-  --query 'Stacks[0].Outputs[?OutputKey==`ApiGatewayUrl`].OutputValue' \
-  --output text
-
-# Test health endpoint
-curl https://your-api-gateway-url.amazonaws.com/user/health
-
-# Create a test user
-curl -X POST https://your-api-gateway-url.amazonaws.com/user \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "age": 30,
-    "department": "Engineering",
-    "role": "Software Engineer",
-    "phoneNumber": "+1234567890"
-  }'
-```
-
-## 📊 Metrics
-
-Metrics depend on workload and AWS configuration; monitor via CloudWatch.
-
-## 🎯 Use Cases
-
-Enterprise user management with CRUD operations and search endpoints.
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-**Build Failures**
-```bash
-# Clean and rebuild
 ./gradlew clean build
-
-# Check Java version
-java -version  # Should be Java 8+
+java -version
 ```
 
-**Deployment Issues**
-- Ensure AWS CLI is configured with proper permissions
-- Verify S3 bucket exists and is accessible
-- Check CloudFormation stack events for specific errors
+Java 8 or higher is recommended.
 
-**API Testing**
+### Deployment Issues
+
+* Ensure AWS CLI is configured with the correct account and region.
+* Verify the S3 bucket exists and is accessible.
+* Check CloudFormation stack events for specific errors.
+* Confirm the Lambda deployment package was uploaded successfully.
+
+### API Testing
+
 ```bash
-# Test with verbose output
 curl -v https://your-api-gateway-url.amazonaws.com/user/health
+```
 
-# Check Lambda logs
+Check Lambda logs:
+
+```bash
 aws logs tail /aws/lambda/UserManagementSystem --follow
 ```
 
-**DynamoDB Issues**
-- Verify table exists: `aws dynamodb describe-table --table-name User`
-- Check IAM permissions for Lambda function
-- Ensure table has proper read/write capacity
+### DynamoDB Issues
 
-## 🤝 Contributing
+```bash
+aws dynamodb describe-table --table-name User
+```
 
-This project serves as a reference implementation for enterprise serverless architectures. Feel free to adapt and extend the codebase for your specific requirements.
+If the table is not found or access is denied:
+
+* Confirm the CloudFormation stack completed successfully.
+* Check the Lambda IAM role permissions.
+* Verify the AWS region used for deployment.
+
+## Future Work
+
+Planned improvements may include:
+
+* JWT-based authentication and authorization
+* Request validation with clearer error responses
+* GitHub Actions workflow for automated build and test
+* CloudWatch dashboard screenshots for observability
+* Terraform or AWS CDK version of the infrastructure
+* Load testing results for API Gateway and Lambda latency
+* DynamoDB access pattern documentation
+
+## Contributing
+
+This project serves as a reference implementation for a Spring Boot serverless backend on AWS. Feel free to adapt and extend the codebase for your specific requirements.
 
 ### Development Guidelines
-- Follow Spring Boot best practices
-- Maintain comprehensive test coverage
-- Document all API endpoints
-- Use semantic versioning for releases
 
-## 📄 License
+* Follow Spring Boot best practices
+* Keep API documentation updated
+* Add or update tests when changing controller or service logic
+* Keep deployment instructions aligned with CloudFormation templates
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+## License
 
-## 🙏 Acknowledgments
-
-- AWS for providing excellent serverless services
-- Spring Boot team for the robust framework
-- Open source community for continuous improvements
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
 
 ---
 
-**Built with ❤️ using AWS Serverless Technologies**
+Built using AWS serverless technologies.
